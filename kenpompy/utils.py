@@ -4,6 +4,9 @@ The utils module provides utility functions, such as logging in.
 
 import mechanicalsoup
 from bs4 import BeautifulSoup
+import pandas as pd
+import kenpompy.misc as kpmisc
+from math import isnan
 
 
 def login(email, password):
@@ -34,3 +37,16 @@ def login(email, password):
 			'Logging in to kenpom.com failed - check that the site is available and your credentials are correct.')
 
 	return browser
+
+def newWinningPercentageDictionary(browser, season=None):
+	ratings_df = kpmisc.get_pomeroy_ratings(browser, season)
+	ratings_df = ratings_df.dropna()
+	print(ratings_df.columns)
+	print(ratings_df)
+	ratings_dict = ratings_df.set_index('Team').to_dict()['W-L']
+	ratings_dict = {k:v for (k,v) in ratings_dict.items() if k != 'Team'}
+	ratings_dict = {k:int(str(v).split("-")[0]) / (int(str(v).split("-")[0]) + int(str(v).split("-")[1])) for (k,v) in ratings_dict.items()}
+	return ratings_dict
+
+def calculateTeamRPI(browser, team=None, season=None):
+	schedule_df = kpteam.get
