@@ -40,12 +40,14 @@ def login(email, password):
 
 def newWinningPercentageDictionary(browser, season=None):
 	ratings_df = kpmisc.get_pomeroy_ratings(browser, season)
-	ratings_df = ratings_df.dropna()
-	print(ratings_df.columns)
 	print(ratings_df)
 	ratings_dict = ratings_df.set_index('Team').to_dict()['W-L']
-	ratings_dict = {k:v for (k,v) in ratings_dict.items() if k != 'Team'}
+	# ratings_dict = {k:v for (k,v) in ratings_dict.items() if k != 'Team'}
+
+	print(ratings_dict)
+
 	ratings_dict = {k:int(str(v).split("-")[0]) / (int(str(v).split("-")[0]) + int(str(v).split("-")[1])) for (k,v) in ratings_dict.items()}
+	print(ratings_dict)
 	return ratings_dict
 
 def calculateTeamRPI(browser, team=None, season=None):

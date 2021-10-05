@@ -33,8 +33,8 @@ def get_valid_teams(browser, season=None):
 	# Get only the team column.
 	team_df = team_df[0].iloc[:, 1]
  	# Remove NCAA tourny seeds for previous seasons.
-	team_df = team_df.str.replace(r'\d+', '')
-	team_df = team_df.str.rstrip()
+	team_df = team_df['Team'].str.replace(r'\d+', '')
+	team_df = team_df['Team'].str.rstrip()
 	team_df = team_df.dropna()
 	# Remove leftover team headers
 	team_list = team_df.values.tolist()
@@ -44,7 +44,7 @@ def get_valid_teams(browser, season=None):
 
 def get_schedule(browser, team=None, season=None):
 	"""
-	Scrapes a team's schedule from (https://kenpom.com) into a list.
+	Scrapes a team's schedule from (https://kenpom.com/team.php) into a dataframe.
 
 	Args:
 		browser (mechanicalsoul StatefulBrowser): Authenticated browser with full access to kenpom.com generated
@@ -53,7 +53,7 @@ def get_schedule(browser, team=None, season=None):
 		season (str, optional): Used to define different seasons. 2002 is the earliest available season.
 
 	Returns:
-		team_list (list): List containing all valid teams for the given season on kenpom.com.
+		team_df (pandas dataframe): Dataframe containing a team's schedule for the given season.
 
 	Raises:
 		ValueError if `season` is less than 2002.

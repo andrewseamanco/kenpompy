@@ -29,16 +29,14 @@ def get_pomeroy_ratings(browser, season=None):
     page = browser.get_current_page()
     table = page.find_all('table')[0]
     ratings_df = pd.read_html(str(table))
+
     # Dataframe tidying.
     ratings_df = ratings_df[0]
-    ratings_df.columns = ['Rk', 'Team', 'Conf', 'W-L', 'AdjEM', 'AdjO', 'AdjORk', 'AdjD', 'AdjDRk',
-       'AdjT', 'AdjTRk', 'Luck', 'LuckRk', 'SOSAdjEM', 'SOSAdjEMRk', 'OppO', 'OppORk',
-       'OppD', 'OppDRk', 'NCSOSAdjEM', 'NCSOSAdjEMRk']
-	
-    # Parse out seed, most current won't have this
-    tmp = ratings_df['Team'].str.extract('(?P<Team>[a-zA-Z]+\\s*[a-zA-Z]+\\.*)\\s*(?P<Seed>\\d*)')
-    ratings_df["Team"] = tmp["Team"]
-    ratings_df["Seed"] = tmp["Seed"]
+    ratings_df.columns = ['Rk', 'Team', 'Conf', 'W-L', 'AdjEM', 'AdjO', 'AdjORk', 'AdjD', 'AdjDRk', 'AdjT', 'AdjTRk', 'Luck', 'LuckRk', 'SOSAdjEM', 'SOSAdjEMRk', 'OppO', 'OppORk', 'OppD', 'OppDRk', 'NCSOSAdjEM', 'NCSOSAdjEMRk']
+    ratings_df['Team'] = ratings_df['Team'].str.replace(r'\d+', '')
+    ratings_df['Team'] = ratings_df['Team'].str.rstrip()
+    ratings_df = ratings_df.dropna()
+    ratings_df = ratings_df[ratings_df['Team'].str.contains('Team')==False]
     return ratings_df
 
 
